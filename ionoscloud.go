@@ -4,17 +4,18 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"net"
 	"strconv"
 	"strings"
 
-	"github.com/docker/machine/libmachine/drivers"
-	"github.com/docker/machine/libmachine/log"
-	"github.com/docker/machine/libmachine/mcnflag"
-	"github.com/docker/machine/libmachine/ssh"
-	"github.com/docker/machine/libmachine/state"
 	"github.com/hashicorp/go-multierror"
 	"github.com/ionos-cloud/docker-machine-driver/utils"
 	sdkgo "github.com/ionos-cloud/sdk-go/v6"
+	"github.com/rancher/machine/libmachine/drivers"
+	"github.com/rancher/machine/libmachine/log"
+	"github.com/rancher/machine/libmachine/mcnflag"
+	"github.com/rancher/machine/libmachine/ssh"
+	"github.com/rancher/machine/libmachine/state"
 )
 
 const (
@@ -93,7 +94,7 @@ type Driver struct {
 }
 
 // NewDriver returns a new driver instance.
-func NewDriver(hostName, storePath string) drivers.Driver {
+func NewDriver(hostName, storePath string) *Driver {
 	return NewDerivedDriver(hostName, storePath)
 }
 
@@ -552,14 +553,14 @@ func (d *Driver) GetSSHHostname() (string, error) {
 
 // GetURL returns a socket address to connect to Docker engine of the machine instance.
 func (d *Driver) GetURL() (string, error) {
-	if err := drivers.MustBeRunning(d); err != nil {
-		return "", err
-	}
 	ip, err := d.GetIP()
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("tcp://%s:2376", ip), nil
+	if ip == "" {
+		return "", nil
+	}
+	return fmt.Sprintf("tcp://%s", net.JoinHostPort(ip, "2376")), nil
 }
 
 // GetIP returns public IP address or hostname of the machine instance.

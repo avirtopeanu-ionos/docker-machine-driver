@@ -11,7 +11,6 @@ github.com/docker/docker/pkg/term
 # github.com/docker/machine v0.16.2
 ## explicit
 github.com/docker/machine/libmachine/drivers
-github.com/docker/machine/libmachine/drivers/plugin
 github.com/docker/machine/libmachine/drivers/plugin/localbinary
 github.com/docker/machine/libmachine/drivers/rpc
 github.com/docker/machine/libmachine/log
@@ -36,17 +35,25 @@ github.com/hashicorp/go-multierror
 # github.com/ionos-cloud/sdk-go/v6 v6.1.3
 ## explicit; go 1.17
 github.com/ionos-cloud/sdk-go/v6
-# github.com/moby/term v0.0.0-20221105221325-4eb28fa6025c
+# github.com/moby/term v0.0.0-20221120202655-abb19827d345
 ## explicit; go 1.18
 github.com/moby/term
 github.com/moby/term/windows
 # github.com/pmezard/go-difflib v1.0.0
 ## explicit
 github.com/pmezard/go-difflib/difflib
+# github.com/rancher/machine v0.13.0
+## explicit
+github.com/rancher/machine/libmachine/drivers
+github.com/rancher/machine/libmachine/drivers/plugin
+github.com/rancher/machine/libmachine/log
+github.com/rancher/machine/libmachine/mcnflag
+github.com/rancher/machine/libmachine/ssh
+github.com/rancher/machine/libmachine/state
 # github.com/stretchr/testify v1.8.1
 ## explicit; go 1.13
 github.com/stretchr/testify/assert
-# golang.org/x/crypto v0.2.0
+# golang.org/x/crypto v0.3.0
 ## explicit; go 1.17
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/chacha20
