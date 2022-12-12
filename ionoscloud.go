@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	b64 "encoding/base64"
 	"fmt"
+	"github.com/ionos-cloud/docker-machine-driver/utils/config"
 	"io/ioutil"
 	"strconv"
 	"strings"
@@ -244,12 +245,40 @@ func (d *Driver) GetCreateFlags() []mcnflag.Flag {
 	}
 }
 
+func (d *Driver) setConfigFromFile() error {
+	cfg, err := config.Load()
+	if err != nil {
+		return err
+	}
+	d.Username = cfg.Username
+	d.Password = cfg.Password
+	d.Token = cfg.Token
+	//d.URL = v
+	return nil
+}
+
 // SetConfigFromFlags initializes driver values from the command line values.
 func (d *Driver) SetConfigFromFlags(opts drivers.DriverOptions) error {
-	d.URL = opts.String(flagEndpoint)
-	d.Username = opts.String(flagUsername)
-	d.Password = opts.String(flagPassword)
-	d.Token = opts.String(flagToken)
+	if err := d.setConfigFromFile(); err != nil {
+		return err
+	}
+	// TODO: Programmatically
+	if v := opts.String(flagUsername); v != "" {
+		d.Username = v
+	}
+	// TODO: Programmatically
+	if v := opts.String(flagPassword); v != "" {
+		d.Password = v
+	}
+	// TODO: Programmatically
+	if v := opts.String(flagToken); v != "" {
+		d.Token = v
+	}
+	// TODO: Programmatically
+	if v := opts.String(flagEndpoint); v != "" {
+		d.URL = v
+	}
+
 	d.DiskSize = opts.Int(flagDiskSize)
 	d.Image = opts.String(flagImage)
 	d.ImagePassword = opts.String(flagImagePassword)
@@ -287,17 +316,17 @@ func (d *Driver) DriverName() string {
 func (d *Driver) PreCreateCheck() error {
 	log.Infof("IONOS Cloud Driver Version: %s", d.Version)
 	log.Infof("SDK-GO Version: %s", sdkgo.Version)
-	if d.Token == "" {
-		if d.Username == "" && d.Password == "" {
-			return fmt.Errorf("please provide username($IONOSCLOUD_USERNAME) and password($IONOSCLOUD_PASSWORD) or token($IONOSCLOUD_TOKEN) to authenticate")
-		}
-		if d.Username == "" {
-			return fmt.Errorf("please provide username as parameter --ionoscloud-username or as environment variable $IONOSCLOUD_USERNAME")
-		}
-		if d.Password == "" {
-			return fmt.Errorf("please provide password as parameter --ionoscloud-password or as environment variable $IONOSCLOUD_PASSWORD")
-		}
-	}
+	//if d.Token == "" {
+	//	if d.Username == "" && d.Password == "" {
+	//		return fmt.Errorf("please provide username($IONOSCLOUD_USERNAME) and password($IONOSCLOUD_PASSWORD) or token($IONOSCLOUD_TOKEN) to authenticate")
+	//	}
+	//	if d.Username == "" {
+	//		return fmt.Errorf("please provide username as parameter --ionoscloud-username or as environment variable $IONOSCLOUD_USERNAME")
+	//	}
+	//	if d.Password == "" {
+	//		return fmt.Errorf("please provide password as parameter --ionoscloud-password or as environment variable $IONOSCLOUD_PASSWORD")
+	//	}
+	//}
 
 	d.DCExists = false
 	d.LanExists = false
